@@ -22,7 +22,7 @@ Ejecuta los siguientes comandos en tu Termux:
 ```bash
 pkg update -y && pkg upgrade -y
 pkg install -y git python python-pip bash
-git clone https://github.com/Z4nzu/hackingtool.git
+git clone https://github.com/TakizawaXD/WIfi.git
 chmod -R 755 hackingtool
 cd hackingtool
 pip install -r requirements.txt
